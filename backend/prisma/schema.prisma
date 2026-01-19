@@ -1,15 +1,293 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
-}
-
+// Configuración de la base de datos
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// Generador del cliente
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ========================================
+// MODELOS
+// ========================================
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  nombre    String
+  rol       Rol      @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("usuarios")
+}
+
+model Cliente {
+  id                   Int      @id @default(autoincrement())
+  nombre               String
+  apellido             String
+  email                String?  @unique
+  telefono             String   @unique
+  direccion            String
+  zona                 Zona
+  restriccionesMedicas String?
+  preferenciaEntrega   TipoEntrega @default(DOMICILIO)
+  estado               EstadoCliente @default(ACTIVO)
+  fechaRegistro        DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  // Relaciones
+  pedidos              Pedido[]
+
+  @@map("clientes")
+}
+
+model MenuSemanal {
+  id                  Int      @id @default(autoincrement())
+  fechaInicioSemana   DateTime
+  fechaPublicacion    DateTime?
+  fechaCierrePedidos  DateTime
+  estado              EstadoMenu @default(BORRADOR)
+  precioBase          Float
+  costoEnvio          Float
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // Relaciones
+  recetas             Receta[]
+  pedidos             Pedido[]
+
+  @@unique([fechaInicioSemana])
+  @@map("menus_semanales")
+}
+
+model Receta {
+  id          Int      @id @default(autoincrement())
+  nombrePlato String
+  descripcion String?
+  tipo        TipoReceta
+  diaSemana   DiaSemana
+  calorias    Int?
+  fotoUrl     String?
+  menuId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  menu               MenuSemanal @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  ingredientes       RecetaIngrediente[]
+  pedidoDetalles     PedidoDetalle[]
+  pedidoReemplazos   PedidoDetalle[] @relation("RecetaReemplazo")
+
+  @@map("recetas")
+}
+
+model Ingrediente {
+  id             Int      @id @default(autoincrement())
+  nombre         String   @unique
+  unidadMedida   String
+  costoUnitario  Float
+  categoria      CategoriaIngrediente
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relaciones
+  recetas        RecetaIngrediente[]
+
+  @@map("ingredientes")
+}
+
+model RecetaIngrediente {
+  id            Int   @id @default(autoincrement())
+  recetaId      Int
+  ingredienteId Int
+  cantidad      Float
+
+  // Relaciones
+  receta      Receta      @relation(fields: [recetaId], references: [id], onDelete: Cascade)
+  ingrediente Ingrediente @relation(fields: [ingredienteId], references: [id], onDelete: Cascade)
+
+  @@unique([recetaId, ingredienteId])
+  @@map("recetas_ingredientes")
+}
+
+model Pedido {
+  id                Int         @id @default(autoincrement())
+  numeroPedido      String      @unique
+  clienteId         Int
+  menuId            Int
+  fechaPedido       DateTime    @default(now())
+  fechaEntrega      DateTime
+  tipoEntrega       TipoEntrega
+  direccionEntrega  String?
+  costoEnvio        Float       @default(0)
+  total             Float
+  estado            EstadoPedido @default(PENDIENTE)
+  notasAdicionales  String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  // Relaciones
+  cliente    Cliente         @relation(fields: [clienteId], references: [id])
+  menu       MenuSemanal     @relation(fields: [menuId], references: [id])
+  detalles   PedidoDetalle[]
+  pago       Pago?
+  rutaDetalle RutaDetalle?
+
+  @@map("pedidos")
+}
+
+model PedidoDetalle {
+  id                Int       @id @default(autoincrement())
+  pedidoId          Int
+  recetaId          Int
+  diaSemana         DiaSemana
+  recetaReemplazoId Int?
+  motivo            String?
+
+  // Relaciones
+  pedido          Pedido  @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  receta          Receta  @relation(fields: [recetaId], references: [id])
+  recetaReemplazo Receta? @relation("RecetaReemplazo", fields: [recetaReemplazoId], references: [id])
+
+  @@map("pedidos_detalles")
+}
+
+model Pago {
+  id             Int         @id @default(autoincrement())
+  pedidoId       Int         @unique
+  monto          Float
+  metodoPago     MetodoPago
+  estado         EstadoPago  @default(PENDIENTE)
+  comprobanteUrl String?
+  referencia     String?
+  notas          String?
+  fechaPago      DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  // Relaciones
+  pedido Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+
+  @@map("pagos")
+}
+
+model RutaEntrega {
+  id            Int          @id @default(autoincrement())
+  fechaEntrega  DateTime
+  estado        EstadoRuta   @default(PLANIFICADA)
+  horaInicio    DateTime?
+  horaFin       DateTime?
+  notas         String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  // Relaciones
+  detalles      RutaDetalle[]
+
+  @@map("rutas_entregas")
+}
+
+model RutaDetalle {
+  id            Int       @id @default(autoincrement())
+  rutaId        Int
+  pedidoId      Int       @unique
+  ordenEntrega  Int
+  horaEstimada  DateTime?
+  horaReal      DateTime?
+  estado        EstadoEntrega @default(PENDIENTE)
+
+  // Relaciones
+  ruta   RutaEntrega @relation(fields: [rutaId], references: [id], onDelete: Cascade)
+  pedido Pedido      @relation(fields: [pedidoId], references: [id])
+
+  @@map("rutas_detalles")
+}
+
+// ========================================
+// ENUMS
+// ========================================
+
+enum Rol {
+  ADMIN
+  VENDEDOR
+  CADETE
+}
+
+enum Zona {
+  SAN_LORENZO
+  IRIONDO
+}
+
+enum TipoEntrega {
+  DOMICILIO
+  RETIRO
+}
+
+enum EstadoCliente {
+  ACTIVO
+  INACTIVO
+}
+
+enum EstadoMenu {
+  BORRADOR
+  PUBLICADO
+  CERRADO
+}
+
+enum TipoReceta {
+  CARNIVORO
+  VEGETARIANO
+}
+
+enum DiaSemana {
+  LUNES
+  MARTES
+  MIERCOLES
+  JUEVES
+  VIERNES
+  SABADO
+  DOMINGO
+}
+
+enum CategoriaIngrediente {
+  PROTEINA
+  VEGETAL
+  CEREAL
+  LACTEO
+  CONDIMENTO
+  OTRO
+}
+
+enum EstadoPedido {
+  PENDIENTE
+  CONFIRMADO
+  PREPARADO
+  ENTREGADO
+  CANCELADO
+}
+
+enum MetodoPago {
+  EFECTIVO
+  TRANSFERENCIA
+}
+
+enum EstadoPago {
+  PENDIENTE
+  PAGADO
+  VERIFICADO
+}
+
+enum EstadoRuta {
+  PLANIFICADA
+  EN_CURSO
+  COMPLETADA
+}
+
+enum EstadoEntrega {
+  PENDIENTE
+  ENTREGADO
 }

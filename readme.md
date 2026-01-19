@@ -96,8 +96,6 @@ npx prisma generate
 
 ## Documentación
 
-- [Documentación de CRUDs](./docs/CRUD.md)
-- [Diagrama DER](./docs/DER.md)
-- [API Endpoints](./docs/API.md)
+drive: https://drive.google.com/drive/folders/1IFRApqsO8bIXcfKKKV9QBcZldGKy5x1K?usp=sharing
 
 Proyecto Maitri - Sistema de viandas

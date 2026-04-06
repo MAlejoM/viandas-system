@@ -5,6 +5,8 @@ import usuarioRoutes from './routes/usuarioRoutes';
 import clienteRoutes from './routes/clienteRoutes';
 import menuRoutes from './routes/menuRoutes';
 import pedidoRoutes from './routes/pedidoRoutes';
+import recetaRoutes from './routes/recetaRoutes';
+import ingredienteRoutes from './routes/ingredienteRoutes';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -31,6 +33,8 @@ app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/clientes', clienteRoutes);
 app.use('/api/menus', menuRoutes);
 app.use('/api/pedidos', pedidoRoutes);
+app.use('/api/recetas', recetaRoutes);
+app.use('/api/ingredientes', ingredienteRoutes);
 
 // Manejador de errores 404
 app.use((req, res) => {
@@ -51,6 +55,8 @@ app.listen(PORT, () => {
   console.log(`  GET  /api/clientes`);
   console.log(`  GET  /api/menus`);
   console.log(`  GET  /api/pedidos`);
+  console.log(`  GET  /api/recetas`);
+  console.log(`  GET  /api/ingredientes`);
 });
 
 // Manejo de errores no capturados

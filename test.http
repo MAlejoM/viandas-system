@@ -170,3 +170,99 @@ Authorization: Bearer {{token}}
 ### Eliminar Pedido (id 1)
 DELETE {{baseUrl}}/api/pedidos/1
 Authorization: Bearer {{token}}
+
+###
+### RECETAS
+###
+
+### Crear Receta
+POST {{baseUrl}}/api/recetas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombrePlato": "Pechuga a la Plancha",
+  "descripcion": "Pechuga de pollo jugosa con vegetales",
+  "tipo": "CARNIVORO",
+  "diaSemana": "LUNES",
+  "calorias": 450,
+  "menuId": 1
+}
+
+### Obtener Todas las Recetas
+GET {{baseUrl}}/api/recetas
+
+### Obtener Receta por ID (id 1)
+GET {{baseUrl}}/api/recetas/1
+
+### Obtener Recetas por Menu (menuId 1)
+GET {{baseUrl}}/api/recetas/menu/1
+
+### Actualizar Receta (id 1)
+PUT {{baseUrl}}/api/recetas/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombrePlato": "Pechuga a la Plancha - Actualizada",
+  "calorias": 500
+}
+
+### Eliminar Receta (id 1)
+DELETE {{baseUrl}}/api/recetas/1
+Authorization: Bearer {{token}}
+
+### Agregar Ingrediente a Receta (recetaId 1)
+POST {{baseUrl}}/api/recetas/1/ingredientes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "ingredienteId": 1,
+  "cantidad": 250
+}
+
+### Obtener Ingredientes de Receta (recetaId 1)
+GET {{baseUrl}}/api/recetas/1/ingredientes
+
+### Eliminar Ingrediente de Receta (recetaId 1, ingredienteId 1)
+DELETE {{baseUrl}}/api/recetas/1/ingredientes/1
+Authorization: Bearer {{token}}
+
+###
+### INGREDIENTES
+###
+
+### Crear Ingrediente
+POST {{baseUrl}}/api/ingredientes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre": "Pechuga de Pollo",
+  "unidadMedida": "gramos",
+  "costoUnitario": 8.50,
+  "categoria": "PROTEINA"
+}
+
+### Obtener Todos los Ingredientes
+GET {{baseUrl}}/api/ingredientes
+
+### Obtener Ingrediente por ID (id 1)
+GET {{baseUrl}}/api/ingredientes/1
+
+### Obtener Ingredientes por Categoría
+GET {{baseUrl}}/api/ingredientes/categoria/PROTEINA
+
+### Actualizar Ingrediente (id 1)
+PUT {{baseUrl}}/api/ingredientes/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "costoUnitario": 9.00
+}
+
+### Eliminar Ingrediente (id 1)
+DELETE {{baseUrl}}/api/ingredientes/1
+Authorization: Bearer {{token}}

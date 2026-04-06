@@ -48,6 +48,23 @@ export interface IReceta {
   updatedAt: Date;
 }
 
+export interface IIngrediente {
+  id: number;
+  nombre: string;
+  unidadMedida: string;
+  costoUnitario: number;
+  categoria: 'PROTEINA' | 'VERDURA' | 'FRUTA' | 'LACTEO' | 'OTRO';
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IRecetaIngrediente {
+  id: number;
+  recetaId: number;
+  ingredienteId: number;
+  cantidad: number;
+}
+
 export interface IPedido {
   id: number;
   numeroPedido: string;

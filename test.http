@@ -1,0 +1,172 @@
+@host = localhost
+@port = 3000
+@baseUrl = http://{{host}}:{{port}}
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkB2aWFuZGFzLmNvbSIsInJvbCI6IlZFTkRFRE9SIiwiaWF0IjoxNzc1NDc5NzU0LCJleHAiOjE3NzYwODQ1NTR9.kKB5JgdtZpQh8-F9CwnDkJV244vz9gDbSwAFo9Hk3Do
+
+###
+### HEALTH
+###
+
+### Health Check
+GET {{baseUrl}}/api/health
+
+###
+### USUARIOS
+###
+
+### Registro Usuario
+POST {{baseUrl}}/api/usuarios/registro
+Content-Type: application/json
+
+{
+  "email": "usuario@viandas.com",
+  "password": "123456",
+  "nombre": "Usuario Test"
+}
+
+### Login
+POST {{baseUrl}}/api/usuarios/login
+Content-Type: application/json
+
+{
+  "email": "admin@viandas.com",
+  "password": "123456"
+}
+
+### Obtener Mi Perfil
+GET {{baseUrl}}/api/usuarios/perfil
+Authorization: Bearer {{token}}
+
+### Obtener Todos los Usuarios
+GET {{baseUrl}}/api/usuarios
+Authorization: Bearer {{token}}
+
+###
+### CLIENTES
+###
+
+### Crear Cliente
+POST {{baseUrl}}/api/clientes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre": "Juan",
+  "apellido": "Perez",
+  "telefono": "1234567890",
+  "direccion": "Calle 123",
+  "zona": "SAN_LORENZO",
+  "preferenciaEntrega": "DOMICILIO"
+}
+
+### Obtener Todos los Clientes
+GET {{baseUrl}}/api/clientes
+Authorization: Bearer {{token}}
+
+### Obtener Cliente por ID (id 1)
+GET {{baseUrl}}/api/clientes/1
+Authorization: Bearer {{token}}
+
+### Obtener Clientes por Zona
+GET {{baseUrl}}/api/clientes/zona/SAN_LORENZO
+Authorization: Bearer {{token}}
+
+### Actualizar Cliente (id 1)
+PUT {{baseUrl}}/api/clientes/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre": "Juan Updated",
+  "apellido": "Perez Updated"
+}
+
+### Eliminar Cliente (id 1)
+DELETE {{baseUrl}}/api/clientes/1
+Authorization: Bearer {{token}}
+
+###
+### MENUS
+###
+
+### Crear Menu
+POST {{baseUrl}}/api/menus
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "fechaInicioSemana": "2026-04-07T00:00:00Z",
+  "fechaCierrePedidos": "2026-04-05T23:59:59Z",
+  "estado": "BORRADOR",
+  "precioBase": 150.00,
+  "costoEnvio": 50.00
+}
+
+### Obtener Todos los Menus
+GET {{baseUrl}}/api/menus
+
+### Obtener Menus Activos
+GET {{baseUrl}}/api/menus/activos
+
+### Obtener Menu por ID (id 1)
+GET {{baseUrl}}/api/menus/1
+
+### Actualizar Menu (id 1)
+PUT {{baseUrl}}/api/menus/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "PUBLICADO"
+}
+
+### Eliminar Menu (id 1)
+DELETE {{baseUrl}}/api/menus/1
+Authorization: Bearer {{token}}
+
+###
+### PEDIDOS
+###
+
+### Crear Pedido
+POST {{baseUrl}}/api/pedidos
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "numeroPedido": "PED-001",
+  "clienteId": 1,
+  "menuId": 1,
+  "fechaEntrega": "2026-04-08T10:00:00Z",
+  "tipoEntrega": "DOMICILIO",
+  "total": 200.00
+}
+
+### Obtener Todos los Pedidos
+GET {{baseUrl}}/api/pedidos
+Authorization: Bearer {{token}}
+
+### Obtener Pedido por ID (id 1)
+GET {{baseUrl}}/api/pedidos/1
+Authorization: Bearer {{token}}
+
+### Obtener Pedidos por Cliente (clienteId 1)
+GET {{baseUrl}}/api/pedidos/cliente/1
+Authorization: Bearer {{token}}
+
+### Obtener Pedidos por Estado
+GET {{baseUrl}}/api/pedidos/estado/PENDIENTE
+Authorization: Bearer {{token}}
+
+### Actualizar Pedido (id 1)
+PUT {{baseUrl}}/api/pedidos/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "CONFIRMADO"
+}
+
+### Eliminar Pedido (id 1)
+DELETE {{baseUrl}}/api/pedidos/1
+Authorization: Bearer {{token}}

@@ -1,6 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import usuarioRoutes from './routes/usuarioRoutes';
+import clienteRoutes from './routes/clienteRoutes';
+import menuRoutes from './routes/menuRoutes';
+import pedidoRoutes from './routes/pedidoRoutes';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -22,6 +26,12 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Rutas principales
+app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/clientes', clienteRoutes);
+app.use('/api/menus', menuRoutes);
+app.use('/api/pedidos', pedidoRoutes);
+
 // Manejador de errores 404
 app.use((req, res) => {
   res.status(404).json({
@@ -34,6 +44,13 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`\nRutas disponibles:`);
+  console.log(`  GET  /api/health`);
+  console.log(`  POST /api/usuarios/registro`);
+  console.log(`  POST /api/usuarios/login`);
+  console.log(`  GET  /api/clientes`);
+  console.log(`  GET  /api/menus`);
+  console.log(`  GET  /api/pedidos`);
 });
 
 // Manejo de errores no capturados

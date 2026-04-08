@@ -26,22 +26,22 @@ export class RecetaController {
     }
   }
 
-  async obtenerPorMenu(req: Request, res: Response) {
-    try {
-      const { menuId } = req.params;
-      const recetas = await recetaService.obtenerPorMenu(parseInt(menuId));
-      res.json(recetas);
-    } catch (error) {
-      res.status(500).json({ error: 'Error al obtener recetas del menú' });
-    }
-  }
-
   async obtenerTodas(req: Request, res: Response) {
     try {
       const recetas = await recetaService.obtenerTodas();
       res.json(recetas);
     } catch (error) {
       res.status(500).json({ error: 'Error al obtener recetas' });
+    }
+  }
+
+  async obtenerPorTipo(req: Request, res: Response) {
+    try {
+      const { tipo } = req.params;
+      const recetas = await recetaService.obtenerPorTipo(tipo);
+      res.json(recetas);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener recetas por tipo' });
     }
   }
 
@@ -62,6 +62,36 @@ export class RecetaController {
       res.json({ message: 'Receta eliminada' });
     } catch (error) {
       res.status(500).json({ error: 'Error al eliminar receta' });
+    }
+  }
+
+  async obtenerPorDia(req: Request, res: Response) {
+    try {
+      const { dia } = req.params;
+      const recetas = await recetaService.obtenerPorDia(dia);
+      res.json(recetas);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener recetas por día' });
+    }
+  }
+
+  async obtenerPorMenuYDia(req: Request, res: Response) {
+    try {
+      const { menuId, dia } = req.params;
+      const recetas = await recetaService.obtenerPorMenuYDia(parseInt(menuId), dia);
+      res.json(recetas);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener recetas por menú y día' });
+    }
+  }
+
+  async obtenerPorTipoYMenu(req: Request, res: Response) {
+    try {
+      const { menuId, tipo } = req.params;
+      const recetas = await recetaService.obtenerPorTipoYMenu(parseInt(menuId), tipo);
+      res.json(recetas);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener recetas por tipo y menú' });
     }
   }
 

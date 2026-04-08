@@ -29,6 +29,18 @@ export class IngredienteService {
     }) as IIngrediente[];
   }
 
+  async obtenerPorNombre(nombre: string): Promise<IIngrediente[]> {
+    return await prisma.ingrediente.findMany({
+      where: {
+        nombre: {
+          contains: nombre,
+          mode: 'insensitive',
+        },
+      },
+      orderBy: { nombre: 'asc' },
+    }) as IIngrediente[];
+  }
+
   async actualizar(id: number, datos: Partial<IIngrediente>): Promise<IIngrediente> {
     return await prisma.ingrediente.update({
       where: { id },

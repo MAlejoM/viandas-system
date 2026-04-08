@@ -4,9 +4,11 @@ import dotenv from 'dotenv';
 import usuarioRoutes from './routes/usuarioRoutes';
 import clienteRoutes from './routes/clienteRoutes';
 import menuRoutes from './routes/menuRoutes';
+import menuRecetaRoutes from './routes/menuRecetaRoutes';
 import pedidoRoutes from './routes/pedidoRoutes';
 import recetaRoutes from './routes/recetaRoutes';
 import ingredienteRoutes from './routes/ingredienteRoutes';
+import { errorHandler } from './middleware/errorHandler';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -32,6 +34,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/clientes', clienteRoutes);
 app.use('/api/menus', menuRoutes);
+app.use('/api/menus-recetas', menuRecetaRoutes);
 app.use('/api/pedidos', pedidoRoutes);
 app.use('/api/recetas', recetaRoutes);
 app.use('/api/ingredientes', ingredienteRoutes);
@@ -43,6 +46,9 @@ app.use((req, res) => {
     path: req.path
   });
 });
+
+// Middleware de manejo centralizado de errores
+app.use(errorHandler);
 
 // Iniciar servidor
 app.listen(PORT, () => {

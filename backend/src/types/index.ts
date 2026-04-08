@@ -40,12 +40,21 @@ export interface IReceta {
   nombrePlato: string;
   descripcion?: string;
   tipo: 'CARNIVORO' | 'VEGETARIANO';
-  diaSemana: string;
   calorias?: number;
   fotoUrl?: string;
-  menuId: number;
   createdAt: Date;
   updatedAt: Date;
+  menus?: IMenuReceta[];
+  ingredientes?: IRecetaIngrediente[];
+}
+
+export interface IMenuReceta {
+  id: number;
+  menuId: number;
+  recetaId: number;
+  diaSemana: 'LUNES' | 'MARTES' | 'MIERCOLES' | 'JUEVES' | 'VIERNES' | 'SABADO' | 'DOMINGO';
+  menu?: IMenuSemanal;
+  receta?: IReceta;
 }
 
 export interface IIngrediente {
@@ -53,9 +62,10 @@ export interface IIngrediente {
   nombre: string;
   unidadMedida: string;
   costoUnitario: number;
-  categoria: 'PROTEINA' | 'VERDURA' | 'FRUTA' | 'LACTEO' | 'OTRO';
+  categoria: 'PROTEINA' | 'VEGETAL' | 'CEREAL' | 'LACTEO' | 'CONDIMENTO' | 'OTRO';
   createdAt: Date;
   updatedAt: Date;
+  recetas?: IRecetaIngrediente[];
 }
 
 export interface IRecetaIngrediente {
@@ -63,6 +73,9 @@ export interface IRecetaIngrediente {
   recetaId: number;
   ingredienteId: number;
   cantidad: number;
+  unidadMedida: string;
+  receta?: IReceta;
+  ingrediente?: IIngrediente;
 }
 
 export interface IPedido {
@@ -76,10 +89,64 @@ export interface IPedido {
   direccionEntrega?: string;
   costoEnvio: number;
   total: number;
-  estado: 'PENDIENTE' | 'CONFIRMADO' | 'ENTREGADO' | 'CANCELADO';
+  estado: 'PENDIENTE' | 'CONFIRMADO' | 'PREPARADO' | 'ENTREGADO' | 'CANCELADO';
   notasAdicionales?: string;
   createdAt: Date;
   updatedAt: Date;
+  cliente?: ICliente;
+  menu?: IMenuSemanal;
+  detalles?: IPedidoDetalle[];
+}
+
+export interface IPedidoDetalle {
+  id: number;
+  pedidoId: number;
+  recetaId: number;
+  diaSemana: 'LUNES' | 'MARTES' | 'MIERCOLES' | 'JUEVES' | 'VIERNES' | 'SABADO' | 'DOMINGO';
+  recetaReemplazoId?: number;
+  motivo?: string;
+  pedido?: IPedido;
+  receta?: IReceta;
+  recetaReemplazo?: IReceta;
+}
+
+export interface IPago {
+  id: number;
+  pedidoId: number;
+  monto: number;
+  metodoPago: 'EFECTIVO' | 'TRANSFERENCIA';
+  estado: 'PENDIENTE' | 'PAGADO' | 'VERIFICADO';
+  comprobanteUrl?: string;
+  referencia?: string;
+  notas?: string;
+  fechaPago?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  pedido?: IPedido;
+}
+
+export interface IRutaEntrega {
+  id: number;
+  fechaEntrega: Date;
+  estado: 'PLANIFICADA' | 'EN_CURSO' | 'COMPLETADA';
+  horaInicio?: Date;
+  horaFin?: Date;
+  notas?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  detalles?: IRutaDetalle[];
+}
+
+export interface IRutaDetalle {
+  id: number;
+  rutaId: number;
+  pedidoId: number;
+  ordenEntrega: number;
+  horaEstimada?: Date;
+  horaReal?: Date;
+  estado: 'PENDIENTE' | 'ENTREGADO';
+  ruta?: IRutaEntrega;
+  pedido?: IPedido;
 }
 
 export interface AuthPayload {

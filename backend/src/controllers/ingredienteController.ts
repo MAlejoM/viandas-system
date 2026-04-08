@@ -45,6 +45,19 @@ export class IngredienteController {
     }
   }
 
+  async obtenerPorNombre(req: Request, res: Response) {
+    try {
+      const { nombre } = req.query;
+      if (!nombre || typeof nombre !== 'string') {
+        return res.status(400).json({ error: 'Parámetro nombre requerido' });
+      }
+      const ingredientes = await ingredienteService.obtenerPorNombre(nombre);
+      res.json(ingredientes);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener ingredientes por nombre' });
+    }
+  }
+
   async actualizar(req: Request, res: Response) {
     try {
       const { id } = req.params;

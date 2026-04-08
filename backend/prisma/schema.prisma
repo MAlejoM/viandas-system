@@ -57,7 +57,7 @@ model MenuSemanal {
   updatedAt           DateTime @updatedAt
 
   // Relaciones
-  recetas             Receta[]
+  recetas             MenuReceta[]
   pedidos             Pedido[]
 
   @@unique([fechaInicioSemana])
@@ -69,20 +69,32 @@ model Receta {
   nombrePlato String
   descripcion String?
   tipo        TipoReceta
-  diaSemana   DiaSemana
   calorias    Int?
   fotoUrl     String?
-  menuId      Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   // Relaciones
-  menu               MenuSemanal @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  menus              MenuReceta[]
   ingredientes       RecetaIngrediente[]
   pedidoDetalles     PedidoDetalle[]
   pedidoReemplazos   PedidoDetalle[] @relation("RecetaReemplazo")
 
   @@map("recetas")
+}
+
+model MenuReceta {
+  id        Int   @id @default(autoincrement())
+  menuId    Int
+  recetaId  Int
+  diaSemana DiaSemana
+
+  // Relaciones
+  menu   MenuSemanal @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  receta Receta      @relation(fields: [recetaId], references: [id], onDelete: Cascade)
+
+  @@unique([menuId, recetaId, diaSemana])
+  @@map("menus_recetas")
 }
 
 model Ingrediente {
@@ -101,10 +113,11 @@ model Ingrediente {
 }
 
 model RecetaIngrediente {
-  id            Int   @id @default(autoincrement())
-  recetaId      Int
-  ingredienteId Int
-  cantidad      Float
+  id              Int   @id @default(autoincrement())
+  recetaId        Int
+  ingredienteId   Int
+  cantidad        Float
+  unidadMedida    String
 
   // Relaciones
   receta      Receta      @relation(fields: [recetaId], references: [id], onDelete: Cascade)

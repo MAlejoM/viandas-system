@@ -184,9 +184,7 @@ Authorization: Bearer {{token}}
   "nombrePlato": "Pechuga a la Plancha",
   "descripcion": "Pechuga de pollo jugosa con vegetales",
   "tipo": "CARNIVORO",
-  "diaSemana": "LUNES",
-  "calorias": 450,
-  "menuId": 1
+  "calorias": 450
 }
 
 ### Obtener Todas las Recetas
@@ -195,8 +193,20 @@ GET {{baseUrl}}/api/recetas
 ### Obtener Receta por ID (id 1)
 GET {{baseUrl}}/api/recetas/1
 
-### Obtener Recetas por Menu (menuId 1)
-GET {{baseUrl}}/api/recetas/menu/1
+### Obtener Recetas por Tipo (CARNIVORO)
+GET {{baseUrl}}/api/recetas/tipo/CARNIVORO
+
+### Obtener Recetas por Tipo (VEGETARIANO)
+GET {{baseUrl}}/api/recetas/tipo/VEGETARIANO
+
+### Obtener Recetas por Día (LUNES)
+GET {{baseUrl}}/api/recetas/dia/LUNES
+
+### Obtener Recetas de Menu por Día (menuId 1, LUNES)
+GET {{baseUrl}}/api/recetas/menu/1/dia/LUNES
+
+### Obtener Recetas de Menu por Tipo (menuId 1, CARNIVORO)
+GET {{baseUrl}}/api/recetas/menu/1/tipo/CARNIVORO
 
 ### Actualizar Receta (id 1)
 PUT {{baseUrl}}/api/recetas/1
@@ -219,7 +229,8 @@ Authorization: Bearer {{token}}
 
 {
   "ingredienteId": 1,
-  "cantidad": 250
+  "cantidad": 250,
+  "unidadMedida": "gramos"
 }
 
 ### Obtener Ingredientes de Receta (recetaId 1)
@@ -251,8 +262,14 @@ GET {{baseUrl}}/api/ingredientes
 ### Obtener Ingrediente por ID (id 1)
 GET {{baseUrl}}/api/ingredientes/1
 
-### Obtener Ingredientes por Categoría
+### Obtener Ingredientes por Nombre (búsqueda)
+GET {{baseUrl}}/api/ingredientes/search?nombre=pollo
+
+### Obtener Ingredientes por Categoría (PROTEINA)
 GET {{baseUrl}}/api/ingredientes/categoria/PROTEINA
+
+### Obtener Ingredientes por Categoría (VEGETAL)
+GET {{baseUrl}}/api/ingredientes/categoria/VEGETAL
 
 ### Actualizar Ingrediente (id 1)
 PUT {{baseUrl}}/api/ingredientes/1
@@ -265,4 +282,39 @@ Authorization: Bearer {{token}}
 
 ### Eliminar Ingrediente (id 1)
 DELETE {{baseUrl}}/api/ingredientes/1
+Authorization: Bearer {{token}}
+
+###
+### MENUS-RECETAS
+###
+
+### Asignar Receta a Menú (menuId 1, recetaId 1, día LUNES)
+POST {{baseUrl}}/api/menus-recetas/1/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "diaSemana": "LUNES"
+}
+
+### Obtener Recetas de un Menú (menuId 1)
+GET {{baseUrl}}/api/menus-recetas/1
+
+### Obtener Recetas de Menú por Día (menuId 1, LUNES)
+GET {{baseUrl}}/api/menus-recetas/1/dia/LUNES
+
+### Obtener Recetas de Menú por Día (menuId 1, MARTES)
+GET {{baseUrl}}/api/menus-recetas/1/dia/MARTES
+
+### Actualizar Día de Receta en Menú (menuId 1, recetaId 1)
+PUT {{baseUrl}}/api/menus-recetas/1/1/dia
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "diaSemana": "MARTES"
+}
+
+### Remover Receta del Menú (menuId 1, recetaId 1)
+DELETE {{baseUrl}}/api/menus-recetas/1/1
 Authorization: Bearer {{token}}

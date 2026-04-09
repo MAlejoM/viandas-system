@@ -143,7 +143,9 @@ export interface FormIngrediente extends Omit<IIngrediente, 'createdAt' | 'updat
   id?: number;
 }
 
-export interface FormRecetaIngrediente extends Omit<IRecetaIngrediente, 'id' | 'receta' | 'ingrediente'> {}
+export interface FormRecetaIngrediente extends Omit<IRecetaIngrediente, 'id' | 'receta' | 'ingrediente' | 'recetaId'> {
+  recetaId?: number;
+}
 
 // ========================================
 // TIPOS DE RESPUESTAS API

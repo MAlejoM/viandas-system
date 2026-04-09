@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { IIngrediente } from '../types';
+import { Link, useLocation } from 'react-router-dom';
+import type { IIngrediente } from '../types';
 import { ingredienteService } from '../services/ingredienteService';
 
 export default function AdminIngredientes() {
   const [ingredientes, setIngredientes] = useState<IIngrediente[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const location = useLocation();
 
+  // Se ejecuta cada vez que llegas a esta página
   useEffect(() => {
     cargarIngredientes();
-  }, []);
+  }, [location.pathname]);
 
   const cargarIngredientes = async () => {
     try {

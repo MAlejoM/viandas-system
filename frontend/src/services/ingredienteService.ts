@@ -1,5 +1,6 @@
 import { apiClient } from './apiClient';
-import { IIngrediente, FormIngrediente, CategoriaIngrediente } from '../types';
+import type { IIngrediente, FormIngrediente, CategoriaIngrediente } from '../types';
+
 
 class IngredienteService {
   private baseURL = '/ingredientes';
@@ -66,10 +67,16 @@ class IngredienteService {
    */
   async crear(ingrediente: FormIngrediente): Promise<IIngrediente> {
     try {
+      console.log('📤 Enviando ingrediente al servidor:', ingrediente);
       const response = await apiClient.instance.post<IIngrediente>(this.baseURL, ingrediente);
+      console.log('✅ Ingrediente creado exitosamente:', response.data);
       return response.data;
-    } catch (error) {
-      console.error('Error al crear ingrediente:', error);
+    } catch (error: any) {
+      console.error('❌ Error al crear ingrediente:', error);
+      if (error.response) {
+        console.error('Status:', error.response.status);
+        console.error('Datos:', error.response.data);
+      }
       throw error;
     }
   }

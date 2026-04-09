@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { IReceta } from '../types';
+import { Link, useLocation } from 'react-router-dom';
+import type { IReceta } from '../types';
 import { recetaService } from '../services/recetaService';
 
 export default function AdminRecetas() {
   const [recetas, setRecetas] = useState<IReceta[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const location = useLocation();
 
+  // Se ejecuta cada vez que llegas a esta página
   useEffect(() => {
     cargarRecetas();
-  }, []);
+  }, [location.pathname]);
 
   const cargarRecetas = async () => {
     try {

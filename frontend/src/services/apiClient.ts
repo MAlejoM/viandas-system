@@ -1,12 +1,15 @@
-import axios, { AxiosInstance, AxiosError } from 'axios';
+import axios from 'axios';
+import type { AxiosInstance, AxiosError } from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+// Usamos URL relativa '/api' para que el proxy de Vite redirija al backend.
+// Esto evita problemas de CORS en desarrollo y facilita el despliegue.
+const API_BASE_URL = '/api';
 
 class ApiClient {
-  private instancee: AxiosInstance;
+  private axiosInstance: AxiosInstance;
 
   constructor(baseURL: string = API_BASE_URL) {
-    this.instancee = axios.create({
+    this.axiosInstance = axios.create({
       baseURL,
       headers: {
         'Content-Type': 'application/json',
@@ -14,7 +17,7 @@ class ApiClient {
     });
 
     // Interceptor para agregar token de autenticación
-    this.instancee.interceptors.request.use((config) => {
+    this.axiosInstance.interceptors.request.use((config) => {
       const token = localStorage.getItem('token');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -23,7 +26,7 @@ class ApiClient {
     });
 
     // Interceptor para manejar errores
-    this.instancee.interceptors.response.use(
+    this.axiosInstance.interceptors.response.use(
       (response) => response,
       (error: AxiosError) => {
         if (error.response?.status === 401) {
@@ -37,7 +40,7 @@ class ApiClient {
   }
 
   get instance() {
-    return this.instancee;
+    return this.axiosInstance;
   }
 
   setToken(token: string) {

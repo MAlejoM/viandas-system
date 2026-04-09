@@ -3,6 +3,10 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import AdminRecetas from './pages/AdminRecetas';
 import AdminIngredientes from './pages/AdminIngredientes';
+import RecetaForm from './pages/RecetaForm';
+import IngredienteForm from './pages/IngredienteForm';
+import RecetaDetail from './pages/RecetaDetail';
+import IngredienteDetail from './pages/IngredienteDetail';
 
 function App() {
   return (
@@ -32,29 +36,59 @@ function App() {
             </Layout>
           }
         />
-        {/* Rutas futuras */}
+
+        {/* Recetas - Crear y Editar (antes de dinámicas /:id) */}
         <Route
           path="/admin/recetas/nueva"
           element={
             <Layout>
-              <div className="bg-white p-8 rounded-lg shadow">
-                <h1 className="text-3xl font-bold mb-4">Nueva Receta</h1>
-                <p className="text-gray-600">Formulario para crear receta (próximamente)</p>
-              </div>
+              <RecetaForm />
             </Layout>
           }
         />
         <Route
-          path="/admin/ingredientes/nuevo"
+          path="/admin/recetas/:id/editar"
           element={
             <Layout>
-              <div className="bg-white p-8 rounded-lg shadow">
-                <h1 className="text-3xl font-bold mb-4">Nuevo Ingrediente</h1>
-                <p className="text-gray-600">Formulario para crear ingrediente (próximamente)</p>
-              </div>
+              <RecetaForm />
             </Layout>
           }
         />
+        <Route
+          path="/admin/recetas/:id"
+          element={
+            <Layout>
+              <RecetaDetail />
+            </Layout>
+          }
+        />
+
+        {/* Ingredientes - Crear y Editar (antes de dinámicas /:id) */}
+        <Route
+          path="/admin/ingredientes/nuevo"
+          element={
+            <Layout>
+              <IngredienteForm />
+            </Layout>
+          }
+        />
+        <Route
+          path="/admin/ingredientes/:id/editar"
+          element={
+            <Layout>
+              <IngredienteForm />
+            </Layout>
+          }
+        />
+        <Route
+          path="/admin/ingredientes/:id"
+          element={
+            <Layout>
+              <IngredienteDetail />
+            </Layout>
+          }
+        />
+
         {/* 404 */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

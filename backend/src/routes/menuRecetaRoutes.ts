@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import { MenuRecetaController } from '../controllers/menuRecetaController';
-import { authMiddleware } from '../middleware/auth';
+// TODO: Reactivar authMiddleware cuando se implemente el login en el frontend
+// import { authMiddleware } from '../middleware/auth';
 
 const router = Router();
 const menuRecetaController = new MenuRecetaController();
 
 // Asignar receta a menú en día específico
-router.post('/:menuId/:recetaId', authMiddleware, (req, res) => menuRecetaController.asignarRecetaAlMenu(req, res));
+router.post('/:menuId/:recetaId', (req, res) => menuRecetaController.asignarRecetaAlMenu(req, res));
 
 // Obtener recetas de un menú
 router.get('/:menuId', (req, res) => menuRecetaController.obtenerRecetasDelMenu(req, res));
@@ -15,9 +16,9 @@ router.get('/:menuId', (req, res) => menuRecetaController.obtenerRecetasDelMenu(
 router.get('/:menuId/dia/:diaSemana', (req, res) => menuRecetaController.obtenerRecetasDelMenuPorDia(req, res));
 
 // Remover receta del menú
-router.delete('/:menuId/:recetaId', authMiddleware, (req, res) => menuRecetaController.removerRecetaDelMenu(req, res));
+router.delete('/:menuId/:recetaId', (req, res) => menuRecetaController.removerRecetaDelMenu(req, res));
 
 // Actualizar día de receta en menú
-router.put('/:menuId/:recetaId/dia', authMiddleware, (req, res) => menuRecetaController.actualizarDiaReceta(req, res));
+router.put('/:menuId/:recetaId/dia', (req, res) => menuRecetaController.actualizarDiaReceta(req, res));
 
 export default router;

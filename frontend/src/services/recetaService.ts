@@ -1,6 +1,6 @@
 import { apiClient } from './apiClient';
-import { IReceta, FormaReceta, IRecetaIngrediente, FormRecetaIngrediente, TipoReceta, DiaSemana } from '../types';
-import { AxiosError } from 'axios';
+import type { IReceta, FormaReceta, IRecetaIngrediente, FormRecetaIngrediente, TipoReceta, DiaSemana } from '../types';
+
 
 class RecetaService {
   private baseURL = '/recetas';
@@ -92,10 +92,16 @@ class RecetaService {
    */
   async crear(receta: FormaReceta): Promise<IReceta> {
     try {
+      console.log('📤 Enviando receta al servidor:', receta);
       const response = await apiClient.instance.post<IReceta>(this.baseURL, receta);
+      console.log('✅ Receta creada exitosamente:', response.data);
       return response.data;
-    } catch (error) {
-      console.error('Error al crear receta:', error);
+    } catch (error: any) {
+      console.error('❌ Error al crear receta:', error);
+      if (error.response) {
+        console.error('Status:', error.response.status);
+        console.error('Datos:', error.response.data);
+      }
       throw error;
     }
   }
@@ -105,10 +111,16 @@ class RecetaService {
    */
   async actualizar(id: number, receta: Partial<FormaReceta>): Promise<IReceta> {
     try {
+      console.log('📤 Actualizando receta en servidor:', { id, receta });
       const response = await apiClient.instance.put<IReceta>(`${this.baseURL}/${id}`, receta);
+      console.log('✅ Receta actualizada exitosamente:', response.data);
       return response.data;
-    } catch (error) {
-      console.error(`Error al actualizar receta ${id}:`, error);
+    } catch (error: any) {
+      console.error(`❌ Error al actualizar receta ${id}:`, error);
+      if (error.response) {
+        console.error('Status:', error.response.status);
+        console.error('Datos:', error.response.data);
+      }
       throw error;
     }
   }
@@ -118,9 +130,15 @@ class RecetaService {
    */
   async eliminar(id: number): Promise<void> {
     try {
+      console.log('📤 Eliminando receta:', id);
       await apiClient.instance.delete(`${this.baseURL}/${id}`);
-    } catch (error) {
-      console.error(`Error al eliminar receta ${id}:`, error);
+      console.log('✅ Receta eliminada exitosamente');
+    } catch (error: any) {
+      console.error(`❌ Error al eliminar receta ${id}:`, error);
+      if (error.response) {
+        console.error('Status:', error.response.status);
+        console.error('Datos:', error.response.data);
+      }
       throw error;
     }
   }

@@ -4,7 +4,7 @@ import { ICliente } from '../types';
 const prisma = new PrismaClient();
 
 export class ClienteService {
-  async crearCliente(datos: Omit<ICliente, 'id' | 'createdAt' | 'updatedAt'>): Promise<ICliente> {
+  async crearCliente(datos: Omit<ICliente, 'id' | 'fechaRegistro' | 'updatedAt'>): Promise<ICliente> {
     // Verificar si ya existe un cliente con ese teléfono o email
     const existeTelefono = await prisma.cliente.findUnique({
       where: { telefono: datos.telefono }
@@ -80,9 +80,16 @@ export class ClienteService {
   }
 
   async eliminarCliente(id: number): Promise<ICliente> {
+    // Prisma no soporta 'include' en delete.
+    // Verificamos primero si tiene pedidos activos para evitar FK constraint error.
+    const pedidosActivos = await prisma.pedido.count({
+      where: { clienteId: id, estado: { not: 'CANCELADO' } }
+    });
+    if (pedidosActivos > 0) {
+      throw new Error(`No se puede eliminar: el cliente tiene ${pedidosActivos} pedido(s) activo(s)`);
+    }
     return await prisma.cliente.delete({
       where: { id },
-      include: { pedidos: true },
     }) as ICliente;
   }
 

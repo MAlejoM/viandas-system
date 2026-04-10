@@ -51,9 +51,12 @@ export class ClienteController {
     try {
       const { id } = req.params;
       await clienteService.eliminarCliente(parseInt(id));
-      res.json({ message: 'Cliente eliminado' });
+      res.json({ message: 'Cliente eliminado correctamente' });
     } catch (error) {
-      res.status(500).json({ error: 'Error al eliminar cliente' });
+      const message = error instanceof Error ? error.message : 'Error al eliminar cliente';
+      // Si es un error de negocio (pedidos activos), devolver 409 Conflict
+      const statusCode = message.includes('pedido') ? 409 : 500;
+      res.status(statusCode).json({ error: message });
     }
   }
 

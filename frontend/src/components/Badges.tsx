@@ -1,4 +1,4 @@
-import { EstadoCliente, Zona, TipoEntrega } from '../types';
+import type { EstadoCliente, Zona, TipoEntrega } from '../types';
 
 interface BadgeProps {
   children: React.ReactNode;

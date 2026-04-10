@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { ICliente } from '../types';
+import type { ICliente } from '../types';
 import { clienteService } from '../services/clienteService';
 
 export const useClientes = () => {

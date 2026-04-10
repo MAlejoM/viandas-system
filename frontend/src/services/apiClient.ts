@@ -16,7 +16,7 @@ class ApiClient {
       },
     });
 
-    // Interceptor para agregar token de autenticación
+    // Interceptor de request: agrega el token Bearer si existe
     this.axiosInstance.interceptors.request.use((config) => {
       const token = localStorage.getItem('token');
       if (token) {
@@ -25,14 +25,18 @@ class ApiClient {
       return config;
     });
 
-    // Interceptor para manejar errores
+    // Interceptor de response: maneja 401
     this.axiosInstance.interceptors.response.use(
       (response) => response,
       (error: AxiosError) => {
         if (error.response?.status === 401) {
-          // Token expirado o inválido
-          localStorage.removeItem('token');
-          window.location.href = '/login';
+          // Evitar loop infinito: no redirigir si el error vino del propio login
+          const isLoginRequest = error.config?.url?.includes('/usuarios/login');
+          if (!isLoginRequest) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('auth_user');
+            window.location.href = '/login';
+          }
         }
         return Promise.reject(error);
       }
@@ -49,6 +53,7 @@ class ApiClient {
 
   clearToken() {
     localStorage.removeItem('token');
+    localStorage.removeItem('auth_user');
   }
 }
 

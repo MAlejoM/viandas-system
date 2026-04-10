@@ -1,17 +1,18 @@
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
 import { IUsuario } from '../types';
 
 const prisma = new PrismaClient();
 
 export class UsuarioService {
+  /**
+   * Crea un usuario con la contraseña en texto plano (sin hash).
+   * TODO: Activar bcrypt cuando se prepare la versión de producción.
+   */
   async crearUsuario(email: string, password: string, nombre: string, rol: string = 'VENDEDOR'): Promise<IUsuario> {
-    const passwordHash = await bcrypt.hash(password, 10);
-    
     return await prisma.usuario.create({
       data: {
         email,
-        password: passwordHash,
+        password, // Plain text - sin hash por ahora
         nombre,
         rol: rol as any,
       },
@@ -47,7 +48,11 @@ export class UsuarioService {
     }) as IUsuario;
   }
 
-  async verificarPassword(passwordIngresado: string, passwordHash: string): Promise<boolean> {
-    return await bcrypt.compare(passwordIngresado, passwordHash);
+  /**
+   * Verifica la contraseña en texto plano (sin bcrypt).
+   * TODO: Reemplazar por bcrypt.compare() en producción.
+   */
+  async verificarPassword(passwordIngresado: string, passwordAlmacenado: string): Promise<boolean> {
+    return passwordIngresado === passwordAlmacenado;
   }
 }

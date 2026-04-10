@@ -7,7 +7,7 @@ export const clienteService = {
    */
   obtenerTodos: async (): Promise<ICliente[]> => {
     try {
-      const response = await apiClient.get<ICliente[]>('/clientes');
+      const response = await apiClient.instance.get<ICliente[]>('/clientes');
       return response.data;
     } catch (error) {
       console.error('Error al obtener clientes:', error);
@@ -20,7 +20,7 @@ export const clienteService = {
    */
   obtenerPorId: async (id: number): Promise<ICliente> => {
     try {
-      const response = await apiClient.get<ICliente>(`/clientes/${id}`);
+      const response = await apiClient.instance.get<ICliente>(`/clientes/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error al obtener cliente ${id}:`, error);
@@ -33,7 +33,7 @@ export const clienteService = {
    */
   crear: async (cliente: Omit<ICliente, 'id' | 'fechaRegistro' | 'updatedAt'>): Promise<ICliente> => {
     try {
-      const response = await apiClient.post<ICliente>('/clientes', cliente);
+      const response = await apiClient.instance.post<ICliente>('/clientes', cliente);
       return response.data;
     } catch (error) {
       console.error('Error al crear cliente:', error);
@@ -46,7 +46,7 @@ export const clienteService = {
    */
   actualizar: async (id: number, cliente: Partial<ICliente>): Promise<ICliente> => {
     try {
-      const response = await apiClient.put<ICliente>(`/clientes/${id}`, cliente);
+      const response = await apiClient.instance.put<ICliente>(`/clientes/${id}`, cliente);
       return response.data;
     } catch (error) {
       console.error(`Error al actualizar cliente ${id}:`, error);
@@ -59,7 +59,7 @@ export const clienteService = {
    */
   eliminar: async (id: number): Promise<void> => {
     try {
-      await apiClient.delete(`/clientes/${id}`);
+      await apiClient.instance.delete(`/clientes/${id}`);
     } catch (error) {
       console.error(`Error al eliminar cliente ${id}:`, error);
       throw error;

@@ -7,6 +7,9 @@ import RecetaForm from './pages/RecetaForm';
 import IngredienteForm from './pages/IngredienteForm';
 import RecetaDetail from './pages/RecetaDetail';
 import IngredienteDetail from './pages/IngredienteDetail';
+import AdminClientes from './pages/AdminClientes';
+import ClienteForm from './pages/ClienteForm';
+import ClienteDetail from './pages/ClienteDetail';
 
 function App() {
   return (
@@ -33,6 +36,40 @@ function App() {
           element={
             <Layout>
               <AdminIngredientes />
+            </Layout>
+          }
+        />
+
+        {/* Clientes - Admin, Crear, Editar y Detalle */}
+        <Route
+          path="/admin/clientes"
+          element={
+            <Layout>
+              <AdminClientes />
+            </Layout>
+          }
+        />
+        <Route
+          path="/admin/clientes/nuevo"
+          element={
+            <Layout>
+              <ClienteForm />
+            </Layout>
+          }
+        />
+        <Route
+          path="/admin/clientes/:id/editar"
+          element={
+            <Layout>
+              <ClienteForm />
+            </Layout>
+          }
+        />
+        <Route
+          path="/admin/clientes/:id"
+          element={
+            <Layout>
+              <ClienteDetail />
             </Layout>
           }
         />

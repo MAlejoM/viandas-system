@@ -38,6 +38,12 @@ export default function Navbar() {
               Ingredientes
             </Link>
             <Link
+              to="/admin/clientes"
+              className="text-white hover:bg-blue-700 px-3 py-2 rounded-md transition-colors"
+            >
+              Clientes
+            </Link>
+            <Link
               to="/menus"
               className="text-white hover:bg-blue-700 px-3 py-2 rounded-md transition-colors"
             >

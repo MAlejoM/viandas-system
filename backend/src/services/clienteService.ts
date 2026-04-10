@@ -5,6 +5,23 @@ const prisma = new PrismaClient();
 
 export class ClienteService {
   async crearCliente(datos: Omit<ICliente, 'id' | 'createdAt' | 'updatedAt'>): Promise<ICliente> {
+    // Verificar si ya existe un cliente con ese teléfono o email
+    const existeTelefono = await prisma.cliente.findUnique({
+      where: { telefono: datos.telefono }
+    });
+    if (existeTelefono) {
+      throw new Error('Ya existe un cliente con este número de teléfono');
+    }
+
+    if (datos.email) {
+      const existeEmail = await prisma.cliente.findUnique({
+        where: { email: datos.email }
+      });
+      if (existeEmail) {
+        throw new Error('Ya existe un cliente registrado con este correo electrónico');
+      }
+    }
+
     return await prisma.cliente.create({
       data: datos as any,
     }) as ICliente;
@@ -30,6 +47,32 @@ export class ClienteService {
   }
 
   async actualizarCliente(id: number, datos: Partial<ICliente>): Promise<ICliente> {
+    // Si se intenta actualizar el teléfono, verificar que no esté en uso por otro cliente
+    if (datos.telefono) {
+      const existeTelefono = await prisma.cliente.findFirst({
+        where: { 
+          telefono: datos.telefono,
+          id: { not: id }
+        }
+      });
+      if (existeTelefono) {
+        throw new Error('Este número de teléfono ya está registrado con otro cliente');
+      }
+    }
+
+    // Si se intenta actualizar el email, verificar que no esté en uso por otro cliente
+    if (datos.email) {
+      const existeEmail = await prisma.cliente.findFirst({
+        where: { 
+          email: datos.email,
+          id: { not: id }
+        }
+      });
+      if (existeEmail) {
+        throw new Error('Este correo electrónico ya está registrado con otro cliente');
+      }
+    }
+
     return await prisma.cliente.update({
       where: { id },
       data: datos,

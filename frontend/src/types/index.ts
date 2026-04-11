@@ -139,6 +139,13 @@ export interface FormaReceta extends Omit<IReceta, 'createdAt' | 'updatedAt' | '
   id?: number;
 }
 
+export interface FormMenu {
+  fechaInicioSemana: string; // ISO date string (YYYY-MM-DD) para input type="date"
+  fechaCierrePedidos: string;
+  precioBase: number | string;
+  costoEnvio: number | string;
+}
+
 export interface FormIngrediente extends Omit<IIngrediente, 'createdAt' | 'updatedAt' | 'id' | 'recetas'> {
   id?: number;
 }

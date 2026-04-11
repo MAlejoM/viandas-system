@@ -18,6 +18,8 @@ import AdminClientes from './pages/AdminClientes';
 import ClienteForm from './pages/ClienteForm';
 import ClienteDetail from './pages/ClienteDetail';
 import AdminMenus from './pages/AdminMenus';
+import MenuForm from './pages/MenuForm';
+import MenuDetail from './pages/MenuDetail';
 
 function App() {
   return (
@@ -111,6 +113,21 @@ function App() {
           <Route path="/admin/menus" element={
             <ProtectedRoute>
               <Layout><AdminMenus /></Layout>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/menus/nuevo" element={
+            <ProtectedRoute>
+              <Layout><MenuForm /></Layout>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/menus/:id/editar" element={
+            <ProtectedRoute>
+              <Layout><MenuForm /></Layout>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/menus/:id" element={
+            <ProtectedRoute>
+              <Layout><MenuDetail /></Layout>
             </ProtectedRoute>
           } />
 
